@@ -1,0 +1,28 @@
+# The `Docker compose` is a tool that helps you to create, deploy and manage 
+# your docker containers.
+# Run `docker-compose up redis` to start the redis service.
+# docker-compose up -d --build redis
+
+version: '3.4'
+
+services:
+  redis:
+    # To create this service, Compose will pull the redis
+    image: redis:6.2.6
+    container_name: redis
+    # This tells Compose that we would like to add environment variables
+    # from a file called .env, located in our build context.
+    env_file: .env
+    ports:
+      - '$REDIS_PORT:6379'
+    # This defines the restart policy. The default is no,
+    # but we have set the container to restart unless it is stopped.
+    restart: unless-stopped
+    # The named volume redis-data will persist the data stored in Redis’s default data directory, /data.
+    # This will ensure that you don’t lose data in cases where you stop or remove containers.
+    volumes:
+      - redis-data:/data
+
+# Our top-level volumes key defines the volumes redis-data.
+volumes:
+  redis-data:
